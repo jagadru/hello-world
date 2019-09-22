@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 src/.pytest_cache/
 src/__pycache__/
 *.pyc
@@ -6,4 +7,8 @@ python_virtualenv/
 activate
 test_data/
 doc/build/
-~           
+.vscode
+*.pyc
+public
+test
+.pytest_cache/
