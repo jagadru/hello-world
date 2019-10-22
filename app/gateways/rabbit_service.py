@@ -3,10 +3,10 @@ import pika
 from threading import Thread
 from threading import Timer
 
-from utils import config
+from app.utils import config
 
 def init():
-    t = Thread(target=list_auth_logout, daemon=True)
+    t = Thread(target=listen_auth_logout, daemon=True)
     t.start()
 
 def listen_auth_logout():
