@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  pricing_app:
+    build: .
+    depends_on:
+      - pricing_mongodb
+    ports:
+      - 3101:3101
+    volumes:
+      - .:/srv/pricing_app
+
+  pricing_mongodb:
+    image: mongo:latest
+    restart: always
+
+  mongo_express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_SERVER: pricing_mongodb
