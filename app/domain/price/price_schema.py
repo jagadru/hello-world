@@ -5,65 +5,65 @@ import app.utils.errors as errors
 import app.utils.schema_validator as validator
 
 PRICE_DB_SCHEMA = {
-    "id_price": {
+    "price_id": {
         "required": True,
-        "type": numbers.Integral,
-        "min": 0
-    },
-    "created": {
-        "required": False,
-        "type": datetime.datetime,
-    },
-    "state": {
-        "required": True,
-        "type": str
-    },
-    "max_price": {
-        "required": False,
         "type": numbers.Real,
         "min": 0
-    },
+        },
+    "price": {
+        "required": True,
+        "type": numbers.Real,
+        "min": 0
+        },
     "min_price": {
         "required": False,
         "type": numbers.Real,
         "min": 0
-    },
-    "price": {
-        "required": True,
+        },
+    "max_price": {
+        "required": False,
         "type": numbers.Real,
-    },
+        "min": 0
+        },
     "price_currency": {
         "required": True,
         "type": str,
+        "minLen": 1,
         "maxLen": 5
-    },
+        },
     "formated_price": {
         "required": True,
         "type": str,
-    },
-    "id_article": {
+        "minLen": 1,
+        "maxLen": 50
+        },
+    "state": {
         "required": True,
-        "type": numbers.Integral,
-        "min": 0
-    },
+        "type": str,
+        "minLen": 1,
+        "maxLen": 50
+        },
+    "article_id": {
+        "required": True,
+        "type": str,
+        "minLen": 0
+        },
 }
 
+
 def new_price():
-    """
-    Create a new blank Price.
-    Return dict<key, value> Price
-    """
 
     return {
-        "price_id": "",
-        "created": "",
-        "state": "",
-        "max_price": 0.0,
-        "min_price": 0.0,
+        "price_id": 0,
         "price": 0.0,
-        "price_currency": "",
-        "formated_price": "",
-        "id_article": ""
+        "min_price": 0.0,
+        "max_price": 0.0,
+        "price_currency": '',
+        "formated_price": '',
+        "created": datetime.datetime.utcnow(),
+        "updated": datetime.datetime.utcnow(),
+        "state": '',
+        "article_id": '',
     }
 
 def validateSchema(document):

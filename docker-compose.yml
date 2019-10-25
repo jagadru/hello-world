@@ -13,6 +13,8 @@ services:
   pricing_mongodb:
     image: mongo:latest
     restart: always
+    ports:
+      - 27017:27017
 
   mongo_express:
     image: mongo-express:latest
@@ -21,3 +23,12 @@ services:
       - 8081:8081
     environment:
       ME_CONFIG_MONGODB_SERVER: pricing_mongodb
+
+  redis:
+    image: redis:latest
+    command: ["redis-server", "--appendonly", "yes"]
+    hostname: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - .:/srv/pricing_app

@@ -1,4 +1,5 @@
-import app.utils.errors as errors
+from collections import OrderedDict
+from app.utils import errors
 
 
 def validateSchema(schema, document):
@@ -25,13 +26,12 @@ def validateSchema(schema, document):
     """
 
     errors = {}
-
     for (k, v) in schema.items():
         required = "required" in v and v["required"]
         if(required and k not in document):
             errors[k] = "Requerido"
 
-        if(k in document):
+        if(k in document.keys()):
             value = document[k]
             if("type" in v and not isinstance(value, v["type"])):
                 errors[k] = "Tipo invalido"
