@@ -1,6 +1,7 @@
 import flask
 
 from app.domain.price import crud_price as crud
+from app.domain.price import rest_validations as restValidator
 from app.utils import (
     errors,
     security
@@ -33,7 +34,7 @@ def init(app):
 
             for price in params:
                 validated_price = restValidator.validateAddPriceParams(price)
-                result = crud.addPrice(validated_price)
+                result = crud.add_price(validated_price)
                 responses.append(result.copy())
 
             return json.dic_to_json(responses)
