@@ -13,6 +13,8 @@ services:
   pricing_mongodb:
     image: mongo:latest
     restart: always
+    ports:
+      - 27017:27017
 
   mongo_express:
     image: mongo-express:latest
