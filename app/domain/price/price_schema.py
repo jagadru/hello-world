@@ -45,8 +45,8 @@ PRICE_DB_SCHEMA = {
         },
     "article_id": {
         "required": True,
-        "type": numbers.Real,
-        "min": 0
+        "type": str,
+        "minLen": 0
         },
 }
 
@@ -61,8 +61,9 @@ def new_price():
         "price_currency": '',
         "formated_price": '',
         "created": datetime.datetime.utcnow(),
+        "updated": datetime.datetime.utcnow(),
         "state": '',
-        "article_id": 0,
+        "article_id": '',
     }
 
 def validateSchema(document):

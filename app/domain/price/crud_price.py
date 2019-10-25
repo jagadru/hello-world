@@ -1,11 +1,11 @@
-import datetime
+from datetime import datetime
 
 from app.utils import errors
 from app.utils import mongo as db
-from app.domain.price import price_schema as price
+from app.domain.price import price_schema as schema
 from app.domain.price import (
     ACTIVE,
-    DISABLED,
+    HIDDEN,
 )
 
 def get_price(id_article):
@@ -81,6 +81,7 @@ def add_price(params):
             "price_currency": {Price Currency}
             "formated_price": {Formated Price}
             "id_article": "{Article Id}"
+            "created": {Created Date}
             "updated": {Updated Date}
         }
 
@@ -94,8 +95,20 @@ def _addOrUpdatePrice(params):
     price = schema.new_price()
 
     if ("price_id" in params):
-        isNew = False
-        old_prices = getPrice(params["article_id"])
+        is_new = False
+        # Se podria hacer con un endpoint de busqueda
+        price = getPrice(params["article_id"])
 
-    prices.update(params)
-    schema.validateSchema(prices)
+    price.update(params)
+    price["updated"] = datetime.utcnow()
+    price["formated_price"] = "{} {}".format(params["price_currency"], params["price"])
+    schema.validateSchema(price)
+
+    if (not is_new):
+        del price["price_id"]
+        r = db.prices.replace_one({"price_id": bson.ObjectId(params["price_id"])}, price)
+        price["price_id"] = params["price_id"]
+    else:
+        price["price_id"] = db.prices.insert_one(price).inserted_id
+
+    return price
