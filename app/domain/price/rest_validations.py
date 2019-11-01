@@ -4,7 +4,6 @@ from app.utils import (
     errors,
     schema_validator
 )
-from app.domain.price import crud_price as crud
 
 PRICE_ADD_SCHEMA = {
     "article_id": {
@@ -43,6 +42,7 @@ PRICE_ADD_SCHEMA = {
 
 PRICE_UPDATE_SCHEMA = {
     "article_id": {
+        "required": True,
         "type": str,
         "minLen": 1,
         "maxLen": 60
@@ -79,14 +79,14 @@ PRICE_UPDATE_SCHEMA = {
 
 def validateAddPriceParams(params):
     if ("price_id" in params):
-        raise error.InvalidArgument("price_id", "Inválido")
+        raise errors.InvalidArgument("price_id", "Inválido")
 
     return schema_validator.validateAndClean(PRICE_ADD_SCHEMA, params)
 
 
 def validateEditPriceParams(priceId, params):
     if (not priceId):
-        raise error.InvalidArgument("price_id", "Inválido")
+        raise errors.InvalidArgument("price_id", "Inválido")
 
     return schema_validator.validateAndClean(PRICE_UPDATE_SCHEMA, params)
 

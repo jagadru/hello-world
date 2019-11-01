@@ -71,8 +71,8 @@
 #     response = app.get('v1/pricing/1')
 #     assert res.status_code == 200
 #
-# # Test caso base de pedido de precio por id_article
-# # Test caso no hay precio con id_article
+# # Test caso base de pedido de precio por article_id
+# # Test caso no hay precio con article_id
 #
 #
 # # db.collection.deleteOne(

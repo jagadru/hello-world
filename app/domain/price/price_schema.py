@@ -7,8 +7,8 @@ import app.utils.schema_validator as validator
 PRICE_DB_SCHEMA = {
     "price_id": {
         "required": True,
-        "type": numbers.Real,
-        "min": 0
+        "type": str,
+        "minLen": 0
         },
     "price": {
         "required": True,
@@ -54,7 +54,7 @@ PRICE_DB_SCHEMA = {
 def new_price():
 
     return {
-        "price_id": 0,
+        "price_id": '',
         "price": 0.0,
         "min_price": 0.0,
         "max_price": 0.0,
@@ -67,7 +67,7 @@ def new_price():
     }
 
 def validateSchema(document):
-    err = validator.validateSchema(ARTICLE_DB_SCHEMA, document)
+    err = validator.validateSchema(PRICE_DB_SCHEMA, document)
 
     if (len(err) > 0):
         raise errors.MultipleArgumentException(err)
