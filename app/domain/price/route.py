@@ -12,7 +12,7 @@ from app.utils import json_serializer as json
 def init(app):
 
     """
-    Create all routes for prices and discounts.
+    Create all routes for prices.
     app: Flask
     """
     @app.route('/v1/pricing/<article_id>', methods=['GET'])

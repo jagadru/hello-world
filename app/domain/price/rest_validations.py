@@ -78,20 +78,14 @@ PRICE_UPDATE_SCHEMA = {
 
 
 def validateAddPriceParams(params):
-    if ("price_id" in params):
-        raise errors.InvalidArgument("price_id", "Inválido")
+    if ("_id" in params):
+        raise errors.InvalidArgument("_id", "Inválido")
 
     return schema_validator.validateAndClean(PRICE_ADD_SCHEMA, params)
 
 
 def validateEditPriceParams(priceId, params):
     if (not priceId):
-        raise errors.InvalidArgument("price_id", "Inválido")
+        raise errors.InvalidArgument("_id", "Inválido")
 
     return schema_validator.validateAndClean(PRICE_UPDATE_SCHEMA, params)
-
-
-#def validatePriceExist(priceId):
-#    article = crud.getPrice(priceId)
-#    if("enabled" not in article or not article["enabled"]):
-#        raise error.InvalidArgument("price_id", "Inválido")

@@ -102,7 +102,7 @@ def add_price(params):
 
 def update_price(price_id, params):
     """
-    Update a priceActualiza un articulo. \n
+    Update a price. \n
     price_id: string ObjectId\n
     params: dict<key, value> Price\n
     return dict<key, value> Price\n
@@ -140,7 +140,7 @@ def update_price(price_id, params):
     @apiUse Errors
 
     """
-    params["price_id"] = price_id
+    params["_id"] = price_id
     return _addOrUpdatePrice(params)
 
 def del_price(article_id):
@@ -170,10 +170,11 @@ def del_price(article_id):
 def _addOrUpdatePrice(params):
     is_new = True
     price = schema.new_price()
-    if ("price_id" in params):
+    import ipdb; ipdb.set_trace()
+    if params.get("_id"):
         is_new = False
         result = get_price(params["article_id"])
-        [price.append(r) for r in result]
+        [price.append(r) for r in list(result)]
 
     price.update(params)
     price["updated"] = datetime.utcnow()
@@ -181,10 +182,10 @@ def _addOrUpdatePrice(params):
     schema.validateSchema(price)
 
     if (not is_new):
-        del price["price_id"]
-        r = db.prices.replace_one({"price_id": bson.ObjectId(params["price_id"])}, price)
-        price["price_id"] = params["price_id"]
+        del price["_id"]
+        r = db.prices.replace_one({"_id": bson.ObjectId(params["_id"])}, price)
+        price["_id"] = params["_id"]
     else:
-        price["price_id"] = db.prices.insert_one(price).inserted_id
+        price["_id"] = db.prices.insert_one(price).inserted_id
 
     return price

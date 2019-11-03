@@ -5,6 +5,7 @@ from flask_cors import CORS
 
 from app.utils import config
 from app.domain.price import route as pricing_routes
+from app.domain.discount import route as discounts_routes
 from app.gateways import rabbit_service
 
 class MainApp:
@@ -17,7 +18,8 @@ class MainApp:
 
         # Init other apps
         self._generate_api_doc()
-        self._init_routes()
+        self._init_pricing_routes()
+        self._init_discounts_routes()
         self._init_rabbit()
 
         MainApp.instance = self.app
@@ -25,8 +27,11 @@ class MainApp:
     def _generate_api_doc(self):
         os.system("apidoc -i ./ -o ./public")
 
-    def _init_routes(self):
+    def _init_pricing_routes(self):
         pricing_routes.init(self.app)
+
+    def _init_discounts_routes(self):
+        discounts_routes.init(self.app)
 
     def _init_rabbit(self):
         rabbit_service.init()

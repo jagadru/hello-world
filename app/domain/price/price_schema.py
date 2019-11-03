@@ -1,28 +1,23 @@
-import datetime
-import numbers
+from datetime import datetime
+from numbers import Real
 
 import app.utils.errors as errors
 import app.utils.schema_validator as validator
 
 PRICE_DB_SCHEMA = {
-    "price_id": {
-        "required": True,
-        "type": str,
-        "minLen": 0
-        },
     "price": {
         "required": True,
-        "type": numbers.Real,
+        "type": Real,
         "min": 0
         },
     "min_price": {
         "required": False,
-        "type": numbers.Real,
+        "type": Real,
         "min": 0
         },
     "max_price": {
         "required": False,
-        "type": numbers.Real,
+        "type": Real,
         "min": 0
         },
     "price_currency": {
@@ -54,14 +49,13 @@ PRICE_DB_SCHEMA = {
 def new_price():
 
     return {
-        "price_id": '',
         "price": 0.0,
         "min_price": 0.0,
         "max_price": 0.0,
         "price_currency": '',
         "formated_price": '',
-        "created": datetime.datetime.utcnow(),
-        "updated": datetime.datetime.utcnow(),
+        "created": datetime.utcnow(),
+        "updated": datetime.utcnow(),
         "state": '',
         "article_id": '',
     }
