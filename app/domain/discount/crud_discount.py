@@ -2,7 +2,7 @@ from datetime import datetime
 
 from app.domain.discount import (
     OFFSET,
-    PAGE
+    PAGE,
 )
 from app.domain.discount import discount_schema as schema
 from app.utils import errors
@@ -44,17 +44,17 @@ def get_discount(article_id, offset, page):
     @apiUse Errors
     """
     try:
-        import ipdb; ipdb.set_trace()
-        if offset == 0 or offset > OFFSET:
+        if not offset or offset == 0 or offset > OFFSET:
             offset = OFFSET
 
-        if page == 0:
+        if not page or page == 0:
             page = PAGE
 
         response = {}
         response['pagination'] = {}
         response['pagination']['object_count'] = db.discounts.find({"article_id": article_id}).count()
         response['pagination']['page_count'] = round(response['pagination']['object_count'] / page)
+        response['pagination']['has_more_items'] = 'False'
 
         if response['pagination']['object_count'] > offset:
             response['pagination']['page_size'] = offset
@@ -151,3 +151,9 @@ def _addOrUpdateDiscount(params):
     else:
         discount['discount_id'] = db.discounts.insert_one(discount).inserted_id
     return discount
+
+
+    ### Falta
+    ### - delete discount
+    ### - update discount
+    ### - mensaje asincrono

@@ -14,28 +14,28 @@ def init(app):
     Create all routes for discounts.
     app: Flask
     """
-    @app.route('/v1/discount/<article_id>', methods=['GET'])
-    def get_discount(article_id):
-        try:
-            return json.dic_to_json(
-                crud.get_discount(article_id, offset=10, page=1)
-            )
-        except Exception as err:
-            return errors. handleError(err)
-
+    @app.route('/v1/pricing/<article_id>/discounts', methods=['GET'])
     @app.route(
-        '/v1/discount/<article_id>/?offset=<int:offset>&page=<int:page>',
+        '/v1/pricing/<article_id>/discounts/?offset=<int:offset>',
         methods=['GET']
     )
-    def get_discounts_paginated(article_id, offset, page):
+    @app.route(
+        '/v1/pricing/<article_id>/discounts/?page=<int:offset>',
+        methods=['GET']
+    )
+    @app.route(
+        '/v1/pricing/<article_id>/discounts/?offset=<int:offset>&page=<int:page>',
+        methods=['GET']
+    )
+    def get_discount(article_id, offset=None, page=None):
         try:
             return json.dic_to_json(
-                crud.get_discount(article_id, offset)
+                crud.get_discount(article_id, offset, page)
             )
         except Exception as err:
             return errors. handleError(err)
 
-    @app.route('/v1/discount', methods=['POST'])
+    @app.route('/v1/pricing/discount/', methods=['POST'])
     def add_discount():
         try:
             security.validateAdminRole(flask.request.headers.get("Authorization"))
