@@ -1,17 +1,13 @@
 from datetime import datetime
-import bson.objectid as bson
 
 from app.utils import errors
 from app.utils import mongo as db
 from app.domain.price import price_schema as schema
-from app.domain.price import (
+from app.domain import (
     ACTIVE,
     HIDDEN,
-    MAX_OFFSET,
-    MAX_PAGE,
-    PAGE,
 )
-from app.domain.price.helpers import validate_offset_page
+from app.domain.helpers import validate_offset_page
 from app.gateways.rabbit_service import send_new_price
 
 def get_price(article_id):
@@ -96,7 +92,7 @@ def add_price(params):
     """
     return _addOrUpdatePrice(params)
 
-def update_price(price_id, params):
+def update_price(article_id, params):
     """
     Update a price. \n
     price_id: string ObjectId\n
@@ -104,7 +100,7 @@ def update_price(price_id, params):
     return dict<key, value> Price\n
     """
     """
-    @api {post} /v1/pricing/:price_id Update Price
+    @api {post} /v1/pricing/:article_id Update Price
     @apiName Update Price
     @apiGroup Price
 
@@ -116,7 +112,7 @@ def update_price(price_id, params):
             "min_price": {Min Price}
             "price": {Current price},
             "price_currency": {Price Currency}
-            "article_id": "{Article Id}"
+            "price_id": "{Price Id}"
         }
 
     @apiSuccessExample {json} Respuesta
@@ -136,7 +132,7 @@ def update_price(price_id, params):
     @apiUse Errors
 
     """
-    params["_id"] = price_id
+    params['article_id'] = article_id
     return _addOrUpdatePrice(params)
 
 def del_price(article_id):
@@ -168,23 +164,22 @@ def _addOrUpdatePrice(params):
     price = schema.new_price()
     old_price = {}
 
-    if params.get("_id"):
+    if params.get("price_id"):
         is_new = False
         old_price = get_price(params["article_id"])
 
     price.update(params)
-    price["updated"] = datetime.utcnow()
     price["formated_price"] = "{} {}".format(params["price_currency"], params["price"])
+    price["article_id"] = params["article_id"]
     schema.validateSchema(price)
 
     if (not is_new):
-        # Cambiar el estado a HIDDEN
-        # Crear un nuevo precio con price de arriba
-        del price["_id"]
-        r = db.prices.replace_one({"_id": bson.ObjectId(params["_id"])}, price)
-        price["_id"] = params["_id"]
-    else:
-        price["_id"] = db.prices.insert_one(price).inserted_id
+        db.prices.update_one(
+            {"article_id": params['article_id']},
+            {"$set": {'state': HIDDEN} }
+        )
+
+    price["_id"] = db.prices.insert_one(price).inserted_id
 
     message = {}
     message['article_id'] = price['article_id']
@@ -255,7 +250,7 @@ def get_price_history(article_id, offset, page):
 
         for result in results:
             price = {}
-            price['_id'] = str(result['_id'])
+            price['price_id'] = str(result['_id'])
             price['created'] = result['created']
             price['state'] = result['state']
             price['max_price'] = result['max_price']
@@ -272,6 +267,4 @@ def get_price_history(article_id, offset, page):
         raise errors.InvalidArgument("article_id", "Invalid object id")
 
 ### Falta
-### - terminar update
 ### - terminar mensaje asincrono
-### - si el resultado de db.prices.find es [], que tire error

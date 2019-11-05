@@ -96,3 +96,24 @@ def send_new_price(exchange, queue, type, prices):
     )
 
     connection.close()
+
+def send_new_discount(exchange, queue, type, discounts):
+
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host=config.get_rabbit_server_url()))
+    channel = connection.channel()
+
+    channel.exchange_declare(exchange=exchange, exchange_type='fanout')
+    channel.queue_declare(queue = queue)
+
+    message = {
+        "type": type,
+        "message": discounts
+    }
+
+    channel.basic_publish(
+        exchange=exchange,
+        routing_key=queue,
+        body=json_serializer.dic_to_json(message)
+    )
+
+    connection.close()

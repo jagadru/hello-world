@@ -41,6 +41,12 @@ DISCOUNT_DB_SCHEMA = {
         "type": str,
         "minLen": 0
         },
+    "state": {
+        "required": True,
+        "type": str,
+        "minLen": 1,
+        "maxLen": 50
+        },
 }
 
 def new_discount():
@@ -57,7 +63,7 @@ def new_discount():
         "validFrom": datetime.utcnow(),
         "validTo": datetime.utcnow(),
         "created": datetime.utcnow(),
-        "updated": datetime.utcnow(),
+        "state": '',
         "article_id": '',
     }
 

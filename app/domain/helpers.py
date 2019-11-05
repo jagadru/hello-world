@@ -1,4 +1,4 @@
-from app.domain.price import (
+from app.domain import (
     MAX_OFFSET,
     MAX_PAGE,
     PAGE,

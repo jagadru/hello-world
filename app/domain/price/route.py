@@ -1,8 +1,8 @@
 import flask
 
 from app.domain.price import crud_price as crud
-from app.domain.price import (
-    rest_validations as restValidator,
+from app.domain.price import rest_validations as restValidator
+from app.domain import (
     MAX_OFFSET,
     PAGE,
 )
@@ -45,16 +45,16 @@ def init(app):
         except Exception as err:
             return errors.handleError(err)
 
-    @app.route('/v1/pricing/<price_id>', methods=['POST'])
-    def update_price(price_id):
+    @app.route('/v1/pricing/<article_id>', methods=['POST'])
+    def update_price(article_id):
         try:
             security.validateAdminRole(flask.request.headers.get("Authorization"))
 
             params = json.body_to_dic(flask.request.data)
 
-            params = restValidator.validateEditPriceParams(price_id, params)
+            params = restValidator.validateEditPriceParams(article_id, params)
 
-            result = crud.update_price(price_id, params)
+            result = crud.update_price(article_id, params)
 
             return json.dic_to_json(result)
         except Exception as err:

@@ -55,7 +55,6 @@ def new_price():
         "price_currency": '',
         "formated_price": '',
         "created": datetime.utcnow(),
-        "updated": datetime.utcnow(),
         "state": '',
         "article_id": '',
     }

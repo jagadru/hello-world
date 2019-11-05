@@ -42,7 +42,7 @@ PRICE_ADD_SCHEMA = {
 
 PRICE_UPDATE_SCHEMA = {
     "article_id": {
-        "required": True,
+        "required": False,
         "type": str,
         "minLen": 1,
         "maxLen": 60
@@ -73,6 +73,12 @@ PRICE_UPDATE_SCHEMA = {
         "type": str,
         "minLen": 1,
         "maxLen": 50
+        },
+    "price_id": {
+        "required": True,
+        "type": str,
+        "minLen": 1,
+        "maxLen": 60
         },
 }
 

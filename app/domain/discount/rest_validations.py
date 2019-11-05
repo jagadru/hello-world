@@ -34,6 +34,12 @@ DISCOUNT_VALID_SCHEMA = {
         "type": str,
         "minLen": 0
         },
+    "state": {
+        "required": True,
+        "type": str,
+        "minLen": 1,
+        "maxLen": 50
+        },
 }
 
 def validateAddDiscountParams(params):
@@ -43,7 +49,7 @@ def validateAddDiscountParams(params):
     return schema_validator.validateAndClean(DISCOUNT_VALID_SCHEMA, params)
 
 
-def validateEditPriceParams(discount_id, params):
+def validateEditDiscountParams(discount_id, params):
     if (not discount_id):
         raise errors.InvalidArgument("_id", "Inválido")
 
