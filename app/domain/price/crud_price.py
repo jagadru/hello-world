@@ -160,20 +160,14 @@ def del_price(article_id):
     db.prices.save(price)
 
 def _addOrUpdatePrice(params):
-    is_new = True
     price = schema.new_price()
-    old_price = {}
-
-    if params.get("price_id"):
-        is_new = False
-        old_price = get_price(params["article_id"])
 
     price.update(params)
     price["formated_price"] = "{} {}".format(params["price_currency"], params["price"])
     price["article_id"] = params["article_id"]
     schema.validateSchema(price)
 
-    if (not is_new):
+    if (not params.get("price_id")):
         db.prices.update_one(
             {"article_id": params['article_id']},
             {"$set": {'state': HIDDEN} }
@@ -265,6 +259,3 @@ def get_price_history(article_id, offset, page):
 
     except Exception:
         raise errors.InvalidArgument("article_id", "Invalid object id")
-
-### Falta
-### - terminar mensaje asincrono

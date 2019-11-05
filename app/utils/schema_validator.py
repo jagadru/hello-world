@@ -1,6 +1,4 @@
-from collections import OrderedDict
 from app.utils import errors
-
 
 def validateSchema(schema, document):
     """
