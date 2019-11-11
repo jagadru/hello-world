@@ -25,7 +25,11 @@ class MainApp:
         MainApp.instance = self.app
 
     def _generate_api_doc(self):
-        os.system("apidoc -i ./ -o ./public")
+        # os.system("apidoc -i ./ -o ./public")
+
+        @self.app.route('/')
+        def index():
+            return flask.send_from_directory('../public', "index.html")
 
     def _init_pricing_routes(self):
         pricing_routes.init(self.app)

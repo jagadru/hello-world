@@ -8,7 +8,10 @@ from app.domain import (
     HIDDEN,
 )
 from app.domain.helpers import validate_offset_page
-from app.gateways.rabbit_service import send_new_price
+from app.gateways.rabbit_service import (
+    send_new_price,
+    send_is_article_valid,
+)
 
 def get_price(article_id):
     """
@@ -90,7 +93,15 @@ def add_price(params):
     @apiUse Errors
 
     """
-    return _addOrUpdatePrice(params)
+    result = _addOrUpdatePrice(params)
+
+    message = {}
+    message['article_id'] = result['article_id']
+    message['price'] = result['price']
+    message['created'] = result['created']
+
+    send_new_price("prices", "prices", "price-change", message)
+    return result
 
 def update_price(article_id, params):
     """
@@ -133,7 +144,15 @@ def update_price(article_id, params):
 
     """
     params['article_id'] = article_id
-    return _addOrUpdatePrice(params)
+    result = _addOrUpdatePrice(params)
+
+    message = {}
+    message['article_id'] = result['article_id']
+    message['price'] = result['price']
+    message['created'] = result['created']
+
+    send_new_price("prices", "prices", "price-change", message)
+    return result
 
 def del_price(article_id):
     """
@@ -155,32 +174,26 @@ def del_price(article_id):
 
     """
     price = get_price(article_id)
-    price["updated"] = datetime.utcnow()
     price["state"] = HIDDEN
     db.prices.save(price)
 
 def _addOrUpdatePrice(params):
     price = schema.new_price()
-
     price.update(params)
+
     price["formated_price"] = "{} {}".format(params["price_currency"], params["price"])
     price["article_id"] = params["article_id"]
+
     schema.validateSchema(price)
 
-    if (not params.get("price_id")):
+    if (not params.get("_id")):
         db.prices.update_one(
             {"article_id": params['article_id']},
             {"$set": {'state': HIDDEN} }
         )
 
     price["_id"] = db.prices.insert_one(price).inserted_id
-
-    message = {}
-    message['article_id'] = price['article_id']
-    message['price'] = price['price']
-    message['created'] = price['created']
-
-    send_new_price("prices", "prices", "price_change", message)
+    send_is_article_valid('catalog', 'catalog', 'article-exist', price)
 
     return price
 

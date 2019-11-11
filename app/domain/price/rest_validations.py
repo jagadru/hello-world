@@ -74,7 +74,7 @@ PRICE_UPDATE_SCHEMA = {
         "minLen": 1,
         "maxLen": 50
         },
-    "price_id": {
+    "_id": {
         "required": True,
         "type": str,
         "minLen": 1,
