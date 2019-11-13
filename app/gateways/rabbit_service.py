@@ -148,7 +148,7 @@ def listen_catalog():
             pika.ConnectionParameters(host=config.get_rabbit_server_url())
         )
         channel = connection.channel()
-        channel.exchange_declare(exchange=EXCHANGE, exchange_type='direct')
+        channel.exchange_declare(exchange=EXCHANGE, exchange_type='fanout')
         result = channel.queue_declare(QUEUE, durable=False)
         queue_name = result.method.queue
         channel.queue_bind(exchange=EXCHANGE, queue=queue_name)
@@ -237,7 +237,7 @@ def send_is_article_valid(exchange, queue, type, price):
     )
 
     channel = connection.channel()
-    channel.exchange_declare(exchange=exchange, exchange_type='direct')
+    channel.exchange_declare(exchange=exchange, exchange_type='fanout')
     channel.queue_declare(queue = queue)
 
     article = {}

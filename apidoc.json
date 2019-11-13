@@ -1,6 +1,6 @@
 {
   "name": "Pricing Service",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Microservicio de Precios",
   "title": "Microservicio de Precios",
   "url" : "/v1/pricing/"
